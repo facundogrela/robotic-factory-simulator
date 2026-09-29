@@ -113,17 +113,8 @@ public class Factory extends Component implements Canvas, Observable {
 		if (!isSimulationStarted()) {
 			this.simulationStarted = true;
 			notifyObservers();
-
-			while (isSimulationStarted()) {
-				behave();
-				
-				try {
-					Thread.sleep(100);
-				}
-				catch (final InterruptedException ex) {
-					System.err.println("Simulation was abruptly interrupted");
-				}
-			}
+			
+			behave();
 		}
 	}
 
@@ -140,7 +131,8 @@ public class Factory extends Component implements Canvas, Observable {
 		boolean behaved = true;
 		
 		for (final Component component : getComponents()) {
-			behaved = component.behave() || behaved;
+			final Thread thread = new Thread(component);
+			thread.start(); 
 		}
 		
 		return behaved;

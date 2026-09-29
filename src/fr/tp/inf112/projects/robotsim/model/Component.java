@@ -2,12 +2,15 @@ package fr.tp.inf112.projects.robotsim.model;
 
 import java.io.Serializable;
 
+
+
 import fr.tp.inf112.projects.canvas.model.Figure;
 import fr.tp.inf112.projects.canvas.model.Style;
 import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
 import fr.tp.inf112.projects.canvas.model.Shape;
 
-public abstract class Component implements Figure, Serializable {
+
+public abstract class Component implements Figure, Serializable, Runnable {
 	
 	private static final long serialVersionUID = -5960950869184030220L;
 
@@ -30,6 +33,7 @@ public abstract class Component implements Figure, Serializable {
 			factory.addComponent(this);
 		}
 	}
+	
 	
 	public String getId() {
 		return id;
@@ -135,5 +139,18 @@ public abstract class Component implements Figure, Serializable {
 	
 	public boolean isSimulationStarted() {
 		return getFactory().isSimulationStarted();
+	}
+	
+	@Override 
+	public void run () {
+		while ( isSimulationStarted()) {
+			behave();
+			
+			try{
+				Thread.sleep(50);				
+			} catch(final InterruptedException ex) {
+				System.err.println("Component thread was interrupted");
+			}
+		}
 	}
 }
