@@ -41,7 +41,6 @@ public class RemoteFileCanvasChooser extends FileCanvasChooser {
             return null;
         }
 
-        // selectionValues makes this dialog display a dropdown.
         return (String) JOptionPane.showInputDialog(
             getViewer(), "Choose a factory saved on the server:", "Open factory",
             JOptionPane.QUESTION_MESSAGE, null, fileNames, fileNames[0]);
@@ -51,13 +50,12 @@ public class RemoteFileCanvasChooser extends FileCanvasChooser {
         while (true) {
             String name = JOptionPane.showInputDialog(getViewer(), "Enter the factory filename:");
             if (name == null) {
-                return null; // The user cancelled.
+                return null;
             }
 
             name = name.trim();
             if (!name.isEmpty() && !name.equals(".") && !name.equals("..")
                     && !name.contains("/") && !name.contains("\\")) {
-                // Inherited newCanvasId() adds the .factory extension if needed.
                 return name;
             }
 

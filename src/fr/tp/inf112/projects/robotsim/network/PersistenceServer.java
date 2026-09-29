@@ -43,7 +43,6 @@ public class PersistenceServer {
                             response = processRequest(request, persistenceManager);
                         } catch (IOException | ClassNotFoundException ex) {
                             LOGGER.log(Level.WARNING, "Failed to process client request", ex);
-                            // Return the failure so the simulator can display an error.
                             response = new IOException("Server could not complete the request: "
                                 + ex.getMessage());
                         }
@@ -76,7 +75,6 @@ public class PersistenceServer {
             validateFileName(factory.getId());
             persistenceManager.persist(factory);
             LOGGER.info("Saved factory to " + factory.getId());
-            // Confirm success only after the file has been written and closed.
             return Boolean.TRUE;
         }
 
@@ -84,7 +82,6 @@ public class PersistenceServer {
     }
 
     private static String[] listFactoryFiles() throws IOException {
-        // "." means the working folder of this server process.
         File serverFolder = new File(".");
         File[] entries = serverFolder.listFiles();
         if (entries == null) {

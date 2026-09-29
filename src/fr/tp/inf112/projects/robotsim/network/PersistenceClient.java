@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/** Shared socket exchange used by the remote manager and file chooser. */
 public final class PersistenceClient {
 
     private PersistenceClient() {
