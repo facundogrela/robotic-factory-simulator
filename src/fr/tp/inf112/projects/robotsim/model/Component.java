@@ -9,6 +9,8 @@ import fr.tp.inf112.projects.canvas.model.Style;
 import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
 import fr.tp.inf112.projects.canvas.model.Shape;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public abstract class Component implements Figure, Serializable, Runnable {
 	
@@ -34,6 +36,8 @@ public abstract class Component implements Figure, Serializable, Runnable {
 		}
 	}
 	
+	private static final Logger LOGGER =
+		    Logger.getLogger(Component.class.getName());
 	
 	public String getId() {
 		return id;
@@ -149,7 +153,7 @@ public abstract class Component implements Figure, Serializable, Runnable {
 			try{
 				Thread.sleep(50);				
 			} catch(final InterruptedException ex) {
-				System.err.println("Component thread was interrupted");
+				LOGGER.log(Level.WARNING, "Component thread was interrupted", ex);
 			}
 		}
 	}
