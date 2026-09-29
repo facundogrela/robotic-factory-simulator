@@ -119,13 +119,71 @@ public class Robot extends Component {
 	}
 	
 	private int moveToNextPathPosition() {
-		final Motion motion = computeMotion();
 		
-		final int displacement = motion == null ? 0 : motion.moveToTarget();
-			
-		notifyObservers();
-		
-		return displacement;
+	     int displacement;
+		 synchronized (getFactory()) {
+			 	
+			 	
+
+		        final Motion motion = computeMotion();
+
+		        displacement = motion == null
+
+		                ? 0
+
+		                : motion.moveToTarget();
+
+		    }
+		 
+		 if (displacement != 0) {
+			 notifyObservers();
+		 } else if (isLivelyLocked()) {
+			 
+			 final Position freeNeighbouringPosition = findFreeNeighbouringPosition();
+			 if (freeNeighbouringPosition != null) {
+				 
+				 	blockedTargetPosition = freeNeighbouringPosition;
+
+				    displacement = moveToNextPathPosition();
+
+				    computePathToCurrentTargetComponent();
+			 }
+		 }
+		 return displacement;
+	}
+	
+	private Position findFreeNeighbouringPosition() {
+
+	    final Position currentPosition = getPosition();
+	    final int step = getFactory().getPathResolution();
+
+	    final int x = currentPosition.getxCoordinate();
+	    final int y = currentPosition.getyCoordinate();
+
+	    final Position[] neighbours = {
+	        new Position(x + step, y),
+	        new Position(x, y + step),
+	        new Position(x, y - step),
+	        new Position(x - step, y)
+	    };
+
+	    for (final Position position : neighbours) {
+
+	        final PositionedShape shape = new RectangularShape(
+	            position.getxCoordinate(),
+	            position.getyCoordinate(),
+	            2,
+	            2
+	        );
+
+	        if (!getFactory().hasObstacleAt(shape)
+	                && !getFactory().hasMobileComponentAt(shape, this)) {
+
+	            return position;
+	        }
+	    }
+
+	    return null;
 	}
 	
 	private void computePathToCurrentTargetComponent() {
@@ -168,6 +226,18 @@ public class Robot extends Component {
 		// the next position from the path
 		return this.blockedTargetPosition == null ? currentPathPositionsIter.next() : this.blockedTargetPosition;
 	}
+	
+	public boolean isLivelyLocked() {
+		 final Position blockedTargetPosition = getBlockedTargetPosition();
+		 
+		 if (blockedTargetPosition == null) {
+		 return false;
+		 }
+		 
+		 final Component otherRobot = getFactory().getMobileComponentAt(blockedTargetPosition, this);
+		 
+		 return otherRobot != null && getPosition().equals(((Robot) otherRobot).getBlockedTargetPosition());
+		}
 	
 	private boolean hasReachedCurrentTarget() {
 		return getPositionedShape().overlays(currTargetComponent.getPositionedShape());
