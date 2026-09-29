@@ -1,0 +1,21 @@
+# Eclipse output and local workspace metadata
+/bin/
+/.metadata/
+*.class
+.DS_Store
+
+# Generated documentation, logs, and saved factory models
+/doc/
+*.log
+*.log.*
+*.lck
+*.factory
+
+# Optional upstream documentation and source distributions
+/libs/jgrapht/javadoc/
+/libs/jgrapht/source/
+
+# Keep the two JGraphT runtime dependencies used by .classpath
+/libs/jgrapht/lib/*
+!/libs/jgrapht/lib/jgrapht-core-1.5.2.jar
+!/libs/jgrapht/lib/jheaps-0.14.jar
