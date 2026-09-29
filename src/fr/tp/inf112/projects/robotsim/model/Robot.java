@@ -192,7 +192,7 @@ public class Robot extends Component {
 	}
 	
 	private Motion computeMotion() {
-		if (!currentPathPositionsIter.hasNext()) {
+		if (blockedTargetPosition == null && !currentPathPositionsIter.hasNext()) {
 
 			// There is no free path to the target
 			blocked = true;
@@ -215,6 +215,7 @@ public class Robot extends Component {
 		}
 
 		// Reset the memorized position
+		blocked = false;
 		this.blockedTargetPosition = null;
 			
 		return new Motion(getPosition(), targetPosition);
