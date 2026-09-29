@@ -16,9 +16,9 @@ import java.util.List;
 import fr.tp.inf112.projects.robotsim.model.Factory;
 import fr.tp.inf112.projects.robotsim.model.FactoryPersistenceManager;
 
-public class HelloServer {
+public class PersistenceServer {
 
-    private static final Logger LOGGER = Logger.getLogger(HelloServer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PersistenceServer.class.getName());
 
     public static void main(String[] args) throws IOException {
         FactoryPersistenceManager persistenceManager = new FactoryPersistenceManager(null);
