@@ -7,6 +7,8 @@ import fr.tp.inf112.projects.canvas.model.Style;
 import fr.tp.inf112.projects.canvas.model.Stroke;
 import fr.tp.inf112.projects.canvas.model.impl.RGBColor;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ComponentStyle implements Style, Stroke, Serializable {
 	
 	private static final long serialVersionUID = -782486828505388494L;
@@ -63,7 +65,7 @@ public class ComponentStyle implements Style, Stroke, Serializable {
 		return lineColor;
 	}
 
-
+	@JsonIgnore
 	@Override
 	public Stroke getStroke() {
 		return this;

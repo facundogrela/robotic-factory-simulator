@@ -12,6 +12,8 @@ import fr.tp.inf112.projects.canvas.model.Shape;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public abstract class Component implements Figure, Serializable, Runnable {
 	
 	private static final long serialVersionUID = -5960950869184030220L;
@@ -51,6 +53,7 @@ public abstract class Component implements Figure, Serializable, Runnable {
 		return positionedShape;
 	}
 	
+	@JsonIgnore
 	public Position getPosition() {
 		PositionedShape shape =  getPositionedShape();
 		return shape == null ? null : shape.getPosition();
@@ -61,6 +64,7 @@ public abstract class Component implements Figure, Serializable, Runnable {
 		return factory;
 	}
 
+	@JsonIgnore
 	@Override
 	public int getxCoordinate() {
 		PositionedShape shape =  getPositionedShape();
@@ -80,6 +84,7 @@ public abstract class Component implements Figure, Serializable, Runnable {
 			return false;
 	}
 
+	@JsonIgnore
 	@Override
 	public int getyCoordinate() {
 		PositionedShape shape =  getPositionedShape();
@@ -116,11 +121,13 @@ public abstract class Component implements Figure, Serializable, Runnable {
 				+ ", shape=" + getPositionedShape();
 	}
 
+	@JsonIgnore
 	public int getWidth() {
 		PositionedShape shape =  getPositionedShape();
 		return shape == null ? 0 : shape.getWidth();
 	}
 
+	@JsonIgnore
 	public int getHeight() {
 		PositionedShape shape =  getPositionedShape();
 		return shape == null ? 0 : shape.getHeight();
@@ -130,6 +137,7 @@ public abstract class Component implements Figure, Serializable, Runnable {
 		return false;
 	}
 	
+	@JsonIgnore
 	public boolean isMobile() {
 		return false;
 	}
@@ -157,16 +165,19 @@ public abstract class Component implements Figure, Serializable, Runnable {
 		return false;
 	}
 	
+	@JsonIgnore
 	@Override
 	public Style getStyle() {
 		return ComponentStyle.DEFAULT;
 	}
 	
+	@JsonIgnore
 	@Override
 	public Shape getShape() {
 		return getPositionedShape();
 	}
 	
+	@JsonIgnore
 	public boolean isSimulationStarted() {
 		Factory factory = getFactory();
 		if (factory == null)

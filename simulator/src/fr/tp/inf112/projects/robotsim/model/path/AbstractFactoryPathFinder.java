@@ -12,6 +12,8 @@ import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
 import fr.tp.inf112.projects.robotsim.model.shapes.RectangularShape;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public abstract class AbstractFactoryPathFinder<Graph, Vertex> implements FactoryPathFinder, Serializable {
 
 	/**
@@ -23,6 +25,7 @@ public abstract class AbstractFactoryPathFinder<Graph, Vertex> implements Factor
 	
 	private final int resolution;
 	
+	@JsonIgnore
 	private transient Graph graph;
 
 	private static final Logger LOGGER =

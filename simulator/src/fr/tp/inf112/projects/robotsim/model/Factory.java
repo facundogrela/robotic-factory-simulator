@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.tp.inf112.projects.canvas.controller.Observable;
 import fr.tp.inf112.projects.canvas.controller.Observer;
 import fr.tp.inf112.projects.canvas.model.Canvas;
@@ -11,6 +13,7 @@ import fr.tp.inf112.projects.canvas.model.Figure;
 import fr.tp.inf112.projects.canvas.model.Style;
 import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
 import fr.tp.inf112.projects.robotsim.model.shapes.RectangularShape;
+
 
 public class Factory extends Component implements Canvas, Observable {
 
@@ -20,6 +23,7 @@ public class Factory extends Component implements Canvas, Observable {
 
     private final List<Component> components;
 
+	@JsonIgnore 
 	private transient List<Observer> observers;
 
 	private transient boolean simulationStarted;
@@ -90,6 +94,7 @@ public class Factory extends Component implements Canvas, Observable {
 		return components;
 	}
 
+	@JsonIgnore
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Collection<Figure> getFigures() {
@@ -109,6 +114,8 @@ public class Factory extends Component implements Canvas, Observable {
 		return super.toString() + " components=" + components + "]";
 	}
 	
+	@JsonIgnore(false)
+	@Override
 	public boolean isSimulationStarted() {
 		return simulationStarted;
 	}

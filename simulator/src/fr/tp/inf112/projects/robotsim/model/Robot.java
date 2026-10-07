@@ -12,6 +12,8 @@ import fr.tp.inf112.projects.robotsim.model.shapes.CircularShape;
 import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
 import fr.tp.inf112.projects.robotsim.model.shapes.RectangularShape;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Robot extends Component {
 	
 	private static final long serialVersionUID = -1218857231970296747L;
@@ -25,13 +27,16 @@ public class Robot extends Component {
 	private int speed;
 	
 	private List<Component> targetComponents;
-	
+
+	@JsonIgnore 
 	private transient Iterator<Component> targetComponentsIterator;
 	
 	private Component currTargetComponent;
 	
+	@JsonIgnore 
 	private transient Iterator<Position> currentPathPositionsIter;
 	
+	@JsonIgnore 
 	private transient boolean blocked;
 	
 	private Position blockedTargetPosition;
@@ -244,6 +249,7 @@ public class Robot extends Component {
 		return this.blockedTargetPosition == null ? currentPathPositionsIter.next() : this.blockedTargetPosition;
 	}
 	
+	@JsonIgnore
 	public boolean isLivelyLocked() {
 		 final Position blockedTargetPosition = getBlockedTargetPosition();
 		 

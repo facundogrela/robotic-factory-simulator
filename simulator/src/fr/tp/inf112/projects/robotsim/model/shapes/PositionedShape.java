@@ -5,6 +5,8 @@ import java.io.Serializable;
 import fr.tp.inf112.projects.canvas.model.Shape;
 import fr.tp.inf112.projects.robotsim.model.Position;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public abstract class PositionedShape implements Shape, Serializable {
 
 	private static final long serialVersionUID = 2217860927757709195L;
@@ -59,6 +61,7 @@ public abstract class PositionedShape implements Shape, Serializable {
 		return position;
 	}
 
+	@JsonIgnore
 	public int getxCoordinate() {
 		return getPosition().getxCoordinate();
 	}
@@ -67,6 +70,7 @@ public abstract class PositionedShape implements Shape, Serializable {
 		return getPosition().setxCoordinate(xCoordinate);
 	}
 	
+	@JsonIgnore 
 	public int getyCoordinate() {
 		return getPosition().getyCoordinate();
 	}
