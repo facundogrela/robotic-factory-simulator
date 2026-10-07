@@ -12,14 +12,20 @@ import fr.tp.inf112.projects.canvas.model.Shape;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public abstract class Component implements Figure, Serializable, Runnable {
 	
 	private static final long serialVersionUID = -5960950869184030220L;
 
 	private String id;
 
+	@JsonBackReference("factory-components")
 	private final Factory factory;
 	
 	private final PositionedShape positionedShape;
