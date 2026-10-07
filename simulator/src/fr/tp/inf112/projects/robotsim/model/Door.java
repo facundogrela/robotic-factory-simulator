@@ -89,6 +89,12 @@ public class Door extends Component {
 		this.room.addDoor(this);
 		this.open = open;
 	}
+
+	public Door() { //it never executes the existing constructor so we dont have to update it to handle null cases cause super(..) calls a constructor of the parent class
+		super(null, null, null);
+		this.room = null;
+		this.open = false;
+	}
 	
 	@Override
 	public Style getStyle() {

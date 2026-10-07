@@ -10,9 +10,14 @@ public class Machine extends Component {
 	public Machine(final Area area,
 				   final RectangularShape shape,
 				   final String name) {
-		super(area.getFactory(), shape, name);
+		super(area == null ? null : area.getFactory(), shape, name);
 		
-		area.setMachine(this);
+		if(area!= null)
+			area.setMachine(this);
+	}
+
+	public Machine(){
+		this(null,null,null);
 	}
 
 	@Override

@@ -39,6 +39,10 @@ public class Room extends Component {
 		areas = new ArrayList<>();
 		doors = new ArrayList<>();
 	}
+
+	public Room(){
+		this(null, new RectangularShape(), null);
+	}
 	
 	protected boolean addArea(final Area area) {
 		return areas.add(area);

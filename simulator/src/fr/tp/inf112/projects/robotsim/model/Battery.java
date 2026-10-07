@@ -14,6 +14,10 @@ public class Battery implements Serializable {
 		this.capacity = capacity;
 		level = capacity;
 	}
+
+	public Battery() {
+		this(0.0f); //this already calls the existing constructor
+	}
 	
 	public float consume(float energy) {
 		level-= energy;

@@ -46,6 +46,10 @@ public class BasicPolygonShape extends PositionedShape implements PolygonShape {
 	
 	@Override
 	public int getWidth() {
+
+		if (getPoints().isEmpty()) {
+    		return 0;
+		}
 		int minCoordinate = Integer.MAX_VALUE;
 		int maxCoordinate = 0;
 		
@@ -61,6 +65,9 @@ public class BasicPolygonShape extends PositionedShape implements PolygonShape {
 
 	@Override
 	public int getHeight() {
+		if (getPoints().isEmpty()) {
+			return 0;
+		}
 		int minCoordinate = Integer.MAX_VALUE;
 		int maxCoordinate = 0;
 		

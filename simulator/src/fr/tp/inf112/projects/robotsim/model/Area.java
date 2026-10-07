@@ -15,11 +15,16 @@ public class Area extends Component {
 	public Area(final Room room,
 				final RectangularShape shape,
 				final String name) {
-		super(room.getFactory(), shape, name);
+		super(room == null ? null : room.getFactory(), shape, name);
 		
-		room.addArea(this);
+		if(room != null)
+			room.addArea(this);
 		
 		machine = null;
+	}
+
+	public Area() {
+		this(null, null, null);
 	}
 	
 	protected void setMachine( final Machine machine ) {
