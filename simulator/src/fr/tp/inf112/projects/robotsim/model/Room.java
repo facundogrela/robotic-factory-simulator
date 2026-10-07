@@ -52,6 +52,22 @@ public class Room extends Component {
 		return doors.add(door);
 	}
 	
+	public PositionedShape getLeftWall() {
+		return leftWall;
+	}
+
+	public PositionedShape getRightWall() {
+		return rightWall;
+	}
+
+	public PositionedShape getTopWall() {
+		return topWall;
+	}
+
+	public PositionedShape getBottomWall() {
+		return bottomWall;
+	}
+
 	public List<Area> getAreas() {
 		return areas;
 	}

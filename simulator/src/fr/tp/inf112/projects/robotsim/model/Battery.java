@@ -31,6 +31,14 @@ public class Battery implements Serializable {
 		return level;
 	}
 
+	public float getCapacity() {
+    	return capacity;
+	}
+
+	public float getLevel() {
+		return level;
+	}
+
 	@Override
 	public String toString() {
 		return "Battery [capacity=" + capacity + "]";

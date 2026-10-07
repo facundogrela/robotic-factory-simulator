@@ -86,7 +86,7 @@ public class Factory extends Component implements Canvas, Observable {
 		return false;
 	}
 
-	protected List<Component> getComponents() {
+	public List<Component> getComponents() {
 		return components;
 	}
 

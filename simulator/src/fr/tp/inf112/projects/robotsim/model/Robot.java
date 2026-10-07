@@ -66,7 +66,19 @@ public class Robot extends Component {
 		return super.toString() + " battery=" + battery + "]";
 	}
 
-	protected int getSpeed() {
+	public Battery getBattery() {
+		return battery;
+	}
+
+	public Component getCurrTargetComponent() {
+		return currTargetComponent;
+	}
+
+	public FactoryPathFinder getPathFinder() {
+		return pathFinder;
+	}
+
+	public int getSpeed() {
 		return speed;
 	}
 
@@ -78,7 +90,7 @@ public class Robot extends Component {
 		return blockedTargetPosition;
 	}
 	
-	private List<Component> getTargetComponents() {
+	public List<Component> getTargetComponents() {
 		if (targetComponents == null) {
 			targetComponents = new ArrayList<>();
 		}

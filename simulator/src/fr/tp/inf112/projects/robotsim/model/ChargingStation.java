@@ -32,7 +32,7 @@ public class ChargingStation extends Component {
 		return super.toString() + "]";
 	}
 
-	protected boolean isCharging() {
+	public boolean isCharging() {
 		return charging;
 	}
 

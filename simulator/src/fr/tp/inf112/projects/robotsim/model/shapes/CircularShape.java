@@ -20,6 +20,10 @@ public class CircularShape extends PositionedShape implements OvalShape {
 		this(0,0,0);
 	}
 
+	public int getRadius() {
+		return radius;
+	}
+
 	@Override
 	public int getWidth() {
 		return 2 * radius;

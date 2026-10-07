@@ -27,6 +27,10 @@ public class Area extends Component {
 		this(null, null, null);
 	}
 	
+	public Machine getMachine() {
+		return machine;
+	}
+
 	protected void setMachine( final Machine machine ) {
 		this.machine = machine;
 	}
