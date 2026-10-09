@@ -126,6 +126,8 @@ public class Robot extends Component {
 			currTargetComponent = nextTargetComponentToVisit();
 			
 			computePathToCurrentTargetComponent();
+		} else if (currentPathPositionsIter == null) {
+			computePathToCurrentTargetComponent();
 		}
 
 		return moveToNextPathPosition() != 0;

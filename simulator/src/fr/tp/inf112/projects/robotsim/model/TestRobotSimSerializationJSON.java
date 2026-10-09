@@ -2,13 +2,9 @@ package fr.tp.inf112.projects.robotsim.model;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.tp.inf112.projects.canvas.model.impl.BasicPoint;
 import fr.tp.inf112.projects.robotsim.model.path.AbstractFactoryPathFinder;
@@ -17,17 +13,13 @@ import fr.tp.inf112.projects.robotsim.model.path.JGraphTDijkstraFactoryPathFinde
 import fr.tp.inf112.projects.robotsim.model.shapes.BasicPolygonShape;
 import fr.tp.inf112.projects.robotsim.model.shapes.CircularShape;
 import fr.tp.inf112.projects.robotsim.model.shapes.RectangularShape;
-import tools.jackson.databind.DefaultTyping;
-import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
-import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 public class TestRobotSimSerializationJSON {
 
     private static final Logger LOGGER = Logger.getLogger(TestRobotSimSerializationJSON.class.getName());
 
-    private final ObjectMapper objectMapper = createObjectMapper();
+    private final ObjectMapper objectMapper = FactoryJsonMapper.createObjectMapper();
 
     @Test
     public void testSerialization() {
@@ -51,31 +43,6 @@ public class TestRobotSimSerializationJSON {
         emptyFactory.stopSimulation();
         runningCopy.stopSimulation();
 
-    }
-
-    public static ObjectMapper createObjectMapper() {
-        BasicPolymorphicTypeValidator validator = BasicPolymorphicTypeValidator.builder()
-                .allowIfSubType("fr.tp.inf112.projects.robotsim.model.")
-                .allowIfSubType(BasicPoint.class)
-                .allowIfSubType(ArrayList.class)
-                .allowIfSubType(LinkedHashSet.class)
-                .build();
-
-        return JsonMapper.builder()
-                // Jackson 3 disables this by default; our model contains final fields.
-                .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
-                .addMixIn(BasicPoint.class, BasicPointJson.class)
-                .activateDefaultTyping(validator, DefaultTyping.NON_FINAL)
-                .build();
-    }
-
-    // BasicPoint belongs to the viewer JAR, so we attach its JSON annotations here.
-    public abstract static class BasicPointJson {
-        @JsonProperty("xCoordinate")
-        public int xCoordinate;
-
-        @JsonProperty("yCoordinate")
-        public int yCoordinate;
     }
 
     public static Factory createFactory() {
