@@ -1,8 +1,12 @@
 package fr.tp.inf112.projects.robotsim.model;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
+
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,26 +27,30 @@ public class TestRobotSimSerializationJSON {
 
     private static final Logger LOGGER = Logger.getLogger(TestRobotSimSerializationJSON.class.getName());
 
-    public static void main(String[] args) {
-        ObjectMapper mapper = createObjectMapper();
+    private final ObjectMapper objectMapper = createObjectMapper();
+
+    @Test
+    public void testSerialization() {
         Factory original = createFactory();
 
-        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(original);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(original);
         LOGGER.info("Factory as JSON:\n" + json);
 
-        Factory restored = mapper.readValue(json, Factory.class);
+        Factory restored = objectMapper.readValue(json, Factory.class);
         checkFactory(original, restored);
         LOGGER.info("PASS: geometry, component types, batteries and shared references.");
+    }
 
+    @Test
+    public void testSimulationStatus() {
         Factory emptyFactory = new Factory(100, 100, "Running status test", 5);
         emptyFactory.startSimulation();
-        Factory runningCopy = mapper.readValue(mapper.writeValueAsString(emptyFactory), Factory.class);
-        check(runningCopy.isSimulationStarted(), "Running simulation status");
+        Factory runningCopy = objectMapper.readValue(objectMapper.writeValueAsString(emptyFactory), Factory.class);
+        assertTrue(runningCopy.isSimulationStarted(), "Running simulation status");
         LOGGER.info("PASS: running simulation status survives the round trip.");
         emptyFactory.stopSimulation();
         runningCopy.stopSimulation();
 
-        LOGGER.info("PASS: Factory -> JSON -> Factory. Model data and relationships were restored.");
     }
 
     public static ObjectMapper createObjectMapper() {
@@ -101,54 +109,49 @@ public class TestRobotSimSerializationJSON {
     }
 
     private static void checkFactory(Factory original, Factory restored) {
-        check(restored != original, "A new factory object was created");
-        check(original.getId().equals(restored.getId()), "Factory ID");
-        check(original.getName().equals(restored.getName()), "Factory name");
-        check(restored.getWidth() == 200 && restored.getHeight() == 200, "Factory dimensions");
-        check(restored.getPathResolution() == 5, "Path resolution");
-        check(restored.getComponents().size() == original.getComponents().size(), "Component count");
+        assertTrue(restored != original, "A new factory object was created");
+        assertTrue(original.getId().equals(restored.getId()), "Factory ID");
+        assertTrue(original.getName().equals(restored.getName()), "Factory name");
+        assertTrue(restored.getWidth() == 200 && restored.getHeight() == 200, "Factory dimensions");
+        assertTrue(restored.getPathResolution() == 5, "Path resolution");
+        assertTrue(restored.getComponents().size() == original.getComponents().size(), "Component count");
 
         for (int i = 0; i < original.getComponents().size(); i++) {
             Component before = original.getComponents().get(i);
             Component after = restored.getComponents().get(i);
-            check(before.getClass() == after.getClass(), "Component type: " + before.getName());
-            check(before.getName().equals(after.getName()), "Component name");
-            check(before.getxCoordinate() == after.getxCoordinate()
+            assertTrue(before.getClass() == after.getClass(), "Component type: " + before.getName());
+            assertTrue(before.getName().equals(after.getName()), "Component name");
+            assertTrue(before.getxCoordinate() == after.getxCoordinate()
                     && before.getyCoordinate() == after.getyCoordinate(), "Position: " + before.getName());
-            check(before.getWidth() == after.getWidth() && before.getHeight() == after.getHeight(),
+            assertTrue(before.getWidth() == after.getWidth() && before.getHeight() == after.getHeight(),
                     "Dimensions: " + before.getName() + " expected " + before.getWidth() + "x"
                             + before.getHeight() + ", got " + after.getWidth() + "x" + after.getHeight());
-            check(after.getFactory() == restored, "Factory reference: " + before.getName());
+            assertTrue(after.getFactory() == restored, "Factory reference: " + before.getName());
         }
 
         Room room = (Room) restored.getComponents().get(0);
         Door door = (Door) restored.getComponents().get(1);
         Area area = (Area) restored.getComponents().get(2);
         Machine machine = (Machine) restored.getComponents().get(3);
-        check(room.getDoors().get(0) == door, "Shared door");
-        check(room.getAreas().get(0) == area, "Shared area");
-        check(area.getMachine() == machine, "Shared machine");
-        check(door.isOpen(), "Open door state");
-        check(room.getRightWall().getxCoordinate() == 95
+        assertTrue(room.getDoors().get(0) == door, "Shared door");
+        assertTrue(room.getAreas().get(0) == area, "Shared area");
+        assertTrue(area.getMachine() == machine, "Shared machine");
+        assertTrue(door.isOpen(), "Open door state");
+        assertTrue(room.getRightWall().getxCoordinate() == 95
                 && room.getBottomWall().getyCoordinate() == 95, "Restored wall positions");
 
         Robot robot = (Robot) restored.getComponents().get(7);
         Robot second = (Robot) restored.getComponents().get(8);
         Robot third = (Robot) restored.getComponents().get(9);
-        check(robot.getBattery().getCapacity() == 10 && robot.getBattery().getLevel() == 7,
+        assertTrue(robot.getBattery().getCapacity() == 10 && robot.getBattery().getLevel() == 7,
                 "Battery capacity and remaining charge");
-        check(robot.getTargetComponents().get(0) == machine, "Robot target refers to the same machine");
-        check(second.getTargetComponents().get(0) == machine, "Shared robot target");
-        check(robot.getPathFinder() == second.getPathFinder(), "Shared pathfinder");
-        check(robot.getPathFinder() instanceof JGraphTDijkstraFactoryPathFinder, "JGraphT pathfinder type");
-        check(third.getPathFinder() instanceof CustomDijkstraFactoryPathFinder, "Custom pathfinder type");
-        check(((AbstractFactoryPathFinder<?, ?>) robot.getPathFinder()).getFactoryModel() == restored,
+        assertTrue(robot.getTargetComponents().get(0) == machine, "Robot target refers to the same machine");
+        assertTrue(second.getTargetComponents().get(0) == machine, "Shared robot target");
+        assertTrue(robot.getPathFinder() == second.getPathFinder(), "Shared pathfinder");
+        assertTrue(robot.getPathFinder() instanceof JGraphTDijkstraFactoryPathFinder, "JGraphT pathfinder type");
+        assertTrue(third.getPathFinder() instanceof CustomDijkstraFactoryPathFinder, "Custom pathfinder type");
+        assertTrue(((AbstractFactoryPathFinder<?, ?>) robot.getPathFinder()).getFactoryModel() == restored,
                 "Pathfinder references the restored factory");
     }
 
-    private static void check(boolean condition, String description) {
-        if (!condition) {
-            throw new AssertionError("FAIL: " + description);
-        }
-    }
 }
