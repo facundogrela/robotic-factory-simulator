@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import fr.tp.inf112.projects.canvas.controller.Observable;
@@ -30,6 +31,7 @@ public class Factory extends Component implements Canvas, Observable {
 	@JsonIgnore 
 	private transient List<Observer> observers;
 
+	@JsonProperty("simulationStarted")
 	private transient boolean simulationStarted;
 	
 	private int pathResolution;
