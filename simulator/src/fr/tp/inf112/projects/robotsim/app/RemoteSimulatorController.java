@@ -42,13 +42,28 @@ public class RemoteSimulatorController extends SimulatorController{
 	@Override
 	public void setCanvas(Canvas canvasModel) {
 		Factory previousFactory = (Factory) getCanvas();
+
 		super.setCanvas(canvasModel);
+
 		Factory newFactory = (Factory) getCanvas();
-		if (previousFactory != null && newFactory != null && previousFactory != newFactory) {
+
+		if (previousFactory != null && newFactory != null
+				&& previousFactory != newFactory) {
 			newFactory.setNotifier(previousFactory.getNotifier());
 		}
+
 		if (newFactory != null) {
 			newFactory.notifyObservers();
+		}
+	}
+
+	public void setCanvas(String json) {
+		try {
+			Factory snapshot = objectMapper.readValue(json, Factory.class);
+
+			SwingUtilities.invokeLater(() -> setCanvas(snapshot));
+		} catch (JacksonException ex) {
+			LOGGER.warning("Could not parse factory update: " + ex.getMessage());
 		}
 	}
 	
@@ -80,7 +95,7 @@ public class RemoteSimulatorController extends SimulatorController{
 					&& Boolean.parseBoolean(response.body())) {
 
 				LOGGER.info("Remote simulation started successfully");
-				startPolling(id);
+				startConsumingEvents();
 
 			} else {
 			    LOGGER.warning(
@@ -130,10 +145,7 @@ public class RemoteSimulatorController extends SimulatorController{
 					&& Boolean.parseBoolean(response.body())) {
 
 				LOGGER.info("Remote simulation stopped successfully");
-				if (pollingThread != null) {
-					pollingThread.interrupt();
-					pollingThread = null;
-				}
+				pollingThread = null;
 
 			} else {
 			    LOGGER.warning(
@@ -227,16 +239,19 @@ public class RemoteSimulatorController extends SimulatorController{
 		}
 	}
 
-	private void startPolling(String id) {
+	private void startConsumingEvents() {
 		pollingThread = new Thread(() -> {
 			try {
-				pollSnapshots(id);
-			} catch (IOException ex) {
-				LOGGER.warning("Could not refresh remote simulation: " + ex.getMessage());
-			} catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
+				FactorySimulationEventConsumer eventConsumer =
+						new FactorySimulationEventConsumer(this);
+
+				eventConsumer.consumeMessages();
+			} catch (RuntimeException ex) {
+				LOGGER.warning(
+						"Could not read Kafka updates: " + ex.getMessage());
 			}
-		}, "factory-snapshot-poller");
+		}, "factory-kafka-consumer");
+
 		pollingThread.start();
 	}
 

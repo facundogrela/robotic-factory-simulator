@@ -13,6 +13,11 @@
 	<classpathentry kind="lib" path="libs/jackson/jackson-databind-3.1.5.jar"/>
 	<classpathentry kind="lib" path="libs/jackson/jackson-annotations-2.21.jar"/>
 	<classpathentry kind="lib" path="libs/jackson/jackson-core-3.1.5.jar"/>
+	<classpathentry kind="lib" path="libs/kafka/kafka-clients-3.8.1.jar"/>
+	<classpathentry kind="lib" path="libs/kafka/lz4-java-1.8.0.jar"/>
+	<classpathentry kind="lib" path="libs/kafka/snappy-java-1.1.10.5.jar"/>
+	<classpathentry kind="lib" path="libs/kafka/zstd-jni-1.5.6-4.jar"/>
+	<classpathentry kind="lib" path="libs/kafka/slf4j-api-2.0.18.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
