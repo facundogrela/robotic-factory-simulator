@@ -2,13 +2,18 @@ package fr.tp.slr201.projects.robotsim.service.simulation.controller;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.tp.inf112.projects.robotsim.model.Factory;
 import fr.tp.inf112.projects.robotsim.model.RemoteFactoryPersistenceManager;
+import fr.tp.slr201.projects.robotsim.service.simulation.notifier.KafkaFactoryModelChangeNotifier;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,24 +27,39 @@ public class SimulationController {
 
     private final RemoteFactoryPersistenceManager persistenceManager = new RemoteFactoryPersistenceManager(null);
 
+    @Autowired
+    private KafkaTemplate<String, Factory> simulationEventTemplate;
+
+    @Autowired
+    private KafkaAdmin kafkaAdmin;
+
     @GetMapping("/simulation/start")
     public boolean startSimulation(@RequestParam("id") String id) {
-        if(runningFactories.containsKey(id))
+        if (runningFactories.containsKey(id)) {
             return false;
-        else {
-            try {
-                Factory factory = (Factory) persistenceManager.read(id);
-                runningFactories.put(id, factory);
-                factory.startSimulation();
-                LOGGER.info("Started simulation for " + id);
-                return true;
+        }
 
-            }
-            catch (IOException exception) {
-                LOGGER.warning("Could not load factory " + id + ": " + exception.getMessage());
-                return false;
-            }
+        Factory factory = null;
+        try {
+            factory = (Factory) persistenceManager.read(id);
+            factory.setNotifier(new KafkaFactoryModelChangeNotifier(
+                    factory, simulationEventTemplate, kafkaAdmin));
 
+            runningFactories.put(id, factory);
+            factory.startSimulation();
+            LOGGER.info("Started simulation for " + id);
+            return true;
+        } catch (IOException | RuntimeException exception) {
+            if (factory != null) {
+                runningFactories.remove(id, factory);
+                try {
+                    factory.stopSimulation();
+                } catch (RuntimeException cleanupException) {
+                    exception.addSuppressed(cleanupException);
+                }
+            }
+            LOGGER.log(Level.WARNING, "Could not start simulation for " + id, exception);
+            return false;
         }
     }
 
