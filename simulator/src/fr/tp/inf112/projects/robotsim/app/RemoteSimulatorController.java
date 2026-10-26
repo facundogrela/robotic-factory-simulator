@@ -45,9 +45,7 @@ public class RemoteSimulatorController extends SimulatorController{
 		super.setCanvas(canvasModel);
 		Factory newFactory = (Factory) getCanvas();
 		if (previousFactory != null && newFactory != null && previousFactory != newFactory) {
-			for (Observer observer : previousFactory.getObservers()) {
-				newFactory.addObserver(observer);
-			}
+			newFactory.setNotifier(previousFactory.getNotifier());
 		}
 		if (newFactory != null) {
 			newFactory.notifyObservers();
