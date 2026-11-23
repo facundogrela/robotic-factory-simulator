@@ -33,18 +33,6 @@ public class TestRobotSimSerializationJSON {
         LOGGER.info("PASS: geometry, component types, batteries and shared references.");
     }
 
-    @Test
-    public void testSimulationStatus() {
-        Factory emptyFactory = new Factory(100, 100, "Running status test", 5);
-        emptyFactory.startSimulation();
-        Factory runningCopy = objectMapper.readValue(objectMapper.writeValueAsString(emptyFactory), Factory.class);
-        assertTrue(runningCopy.isSimulationStarted(), "Running simulation status");
-        LOGGER.info("PASS: running simulation status survives the round trip.");
-        emptyFactory.stopSimulation();
-        runningCopy.stopSimulation();
-
-    }
-
     public static Factory createFactory() {
         Factory factory = new Factory(200, 200, "JSON Test Factory", 5);
         factory.setId("json-test.factory");

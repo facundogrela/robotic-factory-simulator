@@ -33,7 +33,7 @@ public class CustomDijkstraFactoryPathFinder extends AbstractFactoryPathFinder<G
 	}
 
 	@Override
-	public List<Position> findPath(final Component sourceComponent,
+	public synchronized List<Position> findPath(final Component sourceComponent,
 								   final Component targetComponent) {
 		buildGraph();
 		
